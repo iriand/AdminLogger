@@ -3,6 +3,7 @@ package com.iriand.core.object;
 
 import com.iriand.core.object.entity.Account;
 import com.iriand.core.object.tracker.change.logger.ChangesLoggerManagerImpl;
+import com.iriand.core.object.tracker.change.logger.DataBaseChangesLogger;
 import com.iriand.core.object.tracker.change.logger.SystemOutChangesLogger;
 import com.iriand.core.object.tracker.change.model.ChangeItemsPackage;
 import junit.framework.Assert;
@@ -37,7 +38,7 @@ public class Test {
         public void testLog() throws Exception {
 
                     ChangesLoggerManagerImpl changesLoggerManager = (ChangesLoggerManagerImpl) new ChangesLoggerManagerImpl()
-                .registerChangesLogger(new SystemOutChangesLogger());
+                .registerChangesLogger(new SystemOutChangesLogger()).registerChangesLogger(new DataBaseChangesLogger());
 
             Account account = new Account();
             ChangeItemsPackage itemsPackage = account.logChanges();
@@ -49,11 +50,14 @@ public class Test {
             account.setOpid("matt");
             account.setOpid("ivan");
             account.setOpid("bublik");
-            itemsPackage = account.logChanges();
+            itemsPackage = account.logChanges("admin");
 
             Assert.assertTrue(!itemsPackage.isEmpty());
             Assert.assertTrue(itemsPackage.getChangesItems().length == 5);
+            Assert.assertTrue(itemsPackage.getChangesOwner().equals("admin"));
+           // Assert.assertTrue(itemsPackage.getChangesItems()[0].getChangeOwner().equals(""));
 
+            changesLoggerManager.logChanges(itemsPackage);
 
 
 
