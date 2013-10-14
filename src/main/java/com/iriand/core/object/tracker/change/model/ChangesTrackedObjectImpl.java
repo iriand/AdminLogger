@@ -2,8 +2,8 @@ package com.iriand.core.object.tracker.change.model;
 
 import com.iriand.core.object.tracker.change.FieldChangesItem;
 import com.iriand.core.object.tracker.change.ObjectChangesPackage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 /**
  * User: Andrew Ben
@@ -26,7 +26,15 @@ public abstract class ChangesTrackedObjectImpl implements ChangesTrackedObject {
     }
 
     private boolean isDifferent(@Nullable Object oldValue, @Nullable Object newValue) {
-        return true; //todo
+       if(oldValue == null && newValue == null)
+           return false;
+       else if(oldValue == null && newValue != null)
+            return true;
+       else if(oldValue != null && newValue == null)
+           return true;
+       else if(oldValue != newValue)
+           return true;
+        return false;
     }
 
     protected void logChange(@NotNull String name, @Nullable Object oldValue, @Nullable Object newValue) {

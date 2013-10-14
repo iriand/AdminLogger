@@ -1,40 +1,88 @@
 package com.iriand.core.object;
 
+
 import com.iriand.core.object.entity.Account;
-import com.iriand.core.object.entity.Dispatcher;
 import com.iriand.core.object.tracker.change.logger.ChangesLoggerManagerImpl;
-import com.iriand.core.object.tracker.change.logger.FileChangesLogger;
 import com.iriand.core.object.tracker.change.logger.SystemOutChangesLogger;
+import com.iriand.core.object.tracker.change.model.ChangeItemsPackage;
+import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * User: Andrew Ben
  * Date: 10/13/13
  * Time: 11:15 AM
  */
+@RunWith(JUnit4.class)
 public class Test {
 
-    public static void main(String[] args) {
+        @Rule
+        public ExpectedException exception = ExpectedException.none();
 
-        ChangesLoggerManagerImpl changesLoggerManager = (ChangesLoggerManagerImpl) new ChangesLoggerManagerImpl()
-                .registerChangesLogger(new SystemOutChangesLogger())
-                .registerChangesLogger(new FileChangesLogger());
+        @Before
+        public void setUp() throws Exception {
 
-        Account account = new Account();
-        account.setOpid("andrew");
-        account.setOpid("igal");
-        account.setOpid("matt");
-        account.setOpid("ivan");
-        account.setOpid("bublik");
-        changesLoggerManager.logChanges(account.logChanges("andrew ben"));
+        }
 
-        account.setOpid("matt");
-        changesLoggerManager.logChanges(account.logChanges("igal"));
-        changesLoggerManager.logChanges(account.logChanges());
+        @After
+        public void tearDown() throws Exception {
+        }
 
-        Dispatcher dispatcher = new Dispatcher();
-        dispatcher.setEmail("andrew");
-        account.setOpid("matt");
-        changesLoggerManager.logChanges(dispatcher.logChanges("matt"));
+        @org.junit.Test
+        public void testLog() throws Exception {
+
+                    ChangesLoggerManagerImpl changesLoggerManager = (ChangesLoggerManagerImpl) new ChangesLoggerManagerImpl()
+                .registerChangesLogger(new SystemOutChangesLogger());
+
+            Account account = new Account();
+            ChangeItemsPackage itemsPackage = account.logChanges();
+
+            Assert.assertTrue(itemsPackage.isEmpty());
+
+            account.setOpid("andrew");
+            account.setOpid("igal");
+            account.setOpid("matt");
+            account.setOpid("ivan");
+            account.setOpid("bublik");
+            itemsPackage = account.logChanges();
+
+            Assert.assertTrue(!itemsPackage.isEmpty());
+            Assert.assertTrue(itemsPackage.getChangesItems().length == 5);
+
+
+
+
     }
+
+
+
+//    public static void main(String[] args) {
+//
+//        ChangesLoggerManagerImpl changesLoggerManager = (ChangesLoggerManagerImpl) new ChangesLoggerManagerImpl()
+//                .registerChangesLogger(new SystemOutChangesLogger())
+//                .registerChangesLogger(new FileChangesLogger());
+//
+//        Account account = new Account();
+//        account.setOpid("andrew");
+//        account.setOpid("igal");
+//        account.setOpid("matt");
+//        account.setOpid("ivan");
+//        account.setOpid("bublik");
+//        changesLoggerManager.logChanges(account.logChanges("andrew ben"));
+//
+//        account.setOpid("matt");
+//        changesLoggerManager.logChanges(account.logChanges("igal"));
+//        changesLoggerManager.logChanges(account.logChanges());
+//
+//        Dispatcher dispatcher = new Dispatcher();
+//        dispatcher.setEmail("andrew");
+//        account.setOpid("matt");
+//        changesLoggerManager.logChanges(dispatcher.logChanges("matt"));
+//    }
 }
 
